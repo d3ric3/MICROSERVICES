@@ -1,5 +1,17 @@
 version: "3"
 services:
+    api-gateway:
+        build: "./api-gateway"
+        depends_on: 
+            - listings-service
+            - users-service
+        volumes:
+            - ./api-gateway:/opt/app
+        environment: 
+            - DB_URI=mysql://root:password@listings-service-db/db?charset=UTF8
+        ports:
+            - 7000:7000
+
     listings-service:
         build: "./listings-service"
         depends_on: 
@@ -8,6 +20,8 @@ services:
             - ./listings-service:/opt/app
         environment: 
             - DB_URI=mysql://root:password@listings-service-db/db?charset=UTF8
+        ports:
+            - 7100:7100
              
     listings-service-db:
         environment: 
@@ -25,6 +39,8 @@ services:
             - ./users-service:/opt/app
         environment: 
             - DB_URI=mysql://root:password@users-service-db/db?charset=UTF8
+        ports:
+            - 7101:7101
 
     users-service-db:
         environment: 
